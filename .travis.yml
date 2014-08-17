@@ -10,3 +10,6 @@ script:
 - cd build
 - cmake ..
 - make -j3
+notifications:
+  slack:
+    secure: OGTNEAIvRI+OCW55HwA2aF1EQczBhAhBPiZ4qs3xNruRb5gZDMlFU4RU93ECexMYlr17rrxPOSFQUceLAcTrvj5sv7EjcRdANgthM5bTUzBCL9NQLiYw5MVWvJ1AcSk+0EyUkH2u/pQiq1Hg7FJ7EK0EFkip//7J5dhyN6o9378=
