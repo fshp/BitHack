@@ -6,8 +6,8 @@ before_install:
 - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 - sudo apt-get update -qq > /dev/null
 - sudo apt-get install -qq cmake openssl libssl-dev > /dev/null
-- if [ "$CC" = "gcc" ]; then sudo apt-get install -qq gcc-4.9; fi
-- if [ "$CC" = "gcc" ]; then export CC="gcc-4.9"; fi
+- if [ "$CC" = "gcc" ]; then sudo apt-get install -qq gcc-4.8; fi
+- if [ "$CC" = "gcc" ]; then export CC="gcc-4.8"; fi
 script:
 - mkdir build
 - cd build
