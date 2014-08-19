@@ -9,7 +9,11 @@ else()
     include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
 
-set(SOURCE_EXE src/main.c)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -ggdb -O0")
+
+set(SOURCE_EXE src/main.c
+				src/base58.c
+				src/utils.c)
 add_executable(BitHack ${SOURCE_EXE})
 
 target_link_libraries(BitHack ${OPENSSL_LIBRARIES})
