@@ -1,6 +1,5 @@
 #include "openssl/ec.h"
 #include "openssl/obj_mac.h"
-#include "openssl/bio.h"
 #include "base58.h"
 #include "utils.h"
 

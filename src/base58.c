@@ -3,7 +3,6 @@
 #include <openssl/sha.h>
 #include <openssl/ripemd.h>
 #include <openssl/ec.h>
-#include <string.h>
 
 char* key2addr(const EC_KEY *key) {
 	unsigned char pub_key_oct[65];
