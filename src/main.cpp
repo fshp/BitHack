@@ -1,17 +1,17 @@
-#include "openssl/ec.h"
-#include "openssl/obj_mac.h"
-#include "base58.h"
-#include "utils.h"
-#include "CKeyFactory.hpp"
-
 #include <iostream>
+
+#include "CKeyFactory.hpp"
 
 int main() {
 
     BitHack::CKeyFactory factory;
 
-    for(auto i = 0; i < 10000; ++i)
-        std::cout << factory.createKey();
+    std::cout << factory.createKey();
+    auto i = 0;
+    for (i = 0; i < 100000; ++i)
+        std::cout << factory.nextKey();
+
+    std::cerr << "Create key: " << i << std::endl;
 
     return (0);
 }
