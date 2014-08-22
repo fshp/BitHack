@@ -1,5 +1,4 @@
 #include "CKey.hpp"
-#include <ostream>
 #include <boost/format.hpp>
 
 namespace BitHack {

@@ -2,6 +2,7 @@
 #define CKEY_HPP_
 
 #include <array>
+#include <ostream>
 
 namespace BitHack {
 
