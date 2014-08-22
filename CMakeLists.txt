@@ -9,6 +9,14 @@ else()
     include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
 
+find_package(Boost REQUIRED)
+if(NOT Boost_FOUND)
+    message(SEND_ERROR "Failed to find Boost Format")
+    return()
+else()
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -ggdb -O0")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -ggdb -O0")
 
@@ -19,4 +27,4 @@ set(SOURCE_EXE src/main.cpp
 				src/utils.c)
 add_executable(BitHack ${SOURCE_EXE})
 
-target_link_libraries(BitHack ${OPENSSL_LIBRARIES})
+target_link_libraries(BitHack ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
