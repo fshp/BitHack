@@ -14,6 +14,18 @@ const string CKeyFactory::base58_map =
 CKeyFactory::CKeyFactory() {
     bn_ctx = BN_CTX_new();
     key = EC_KEY_new_by_curve_name(NID_secp256k1);
+
+    //precompute for faster operation
+    const EC_GROUP *group = EC_KEY_get0_group(key);
+    EC_GROUP *precomputeGroup = EC_GROUP_new_by_curve_name(NID_secp256k1);
+    EC_GROUP_copy(precomputeGroup, group);
+
+    EC_GROUP_precompute_mult(precomputeGroup, bn_ctx);
+
+    EC_KEY_set_group(key, precomputeGroup);
+
+    EC_GROUP_free(precomputeGroup);
+
 }
 
 CKeyFactory::~CKeyFactory() {
