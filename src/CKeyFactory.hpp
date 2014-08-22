@@ -17,6 +17,7 @@ public:
     CKeyFactory();
     virtual ~CKeyFactory();
     CKey createKey();
+    CKey nextKey();
 
 protected:
     BN_CTX *bn_ctx;
@@ -24,6 +25,7 @@ protected:
     SHA256_CTX sha_ctx;
     EC_KEY *key;
     static const string base58_map;
+    CKey transform();
 
 };
 

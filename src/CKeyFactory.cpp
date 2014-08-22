@@ -36,6 +36,30 @@ CKeyFactory::~CKeyFactory() {
 CKey CKeyFactory::createKey() {
     EC_KEY_generate_key(key);
 
+    return transform();
+}
+
+CKey CKeyFactory::nextKey() {
+    const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
+    BIGNUM newPrivateKey;
+    BN_init(&newPrivateKey);
+    BN_copy(&newPrivateKey, privateKeyBN);
+    BN_add_word(&newPrivateKey, 1);
+
+    EC_POINT *newPubKey = EC_POINT_new(EC_KEY_get0_group(key));
+    EC_POINT_mul(EC_KEY_get0_group(key), newPubKey, &newPrivateKey, NULL, NULL,
+            bn_ctx);
+
+    EC_KEY_set_private_key(key, &newPrivateKey);
+    EC_KEY_set_public_key(key, newPubKey);
+
+    BN_free(&newPrivateKey);
+    EC_POINT_free(newPubKey);
+
+    return transform();
+}
+
+CKey CKeyFactory::transform() {
     array<unsigned char, 32> privKey;
     array<unsigned char, 20> ripemd160_hash;
     {
