@@ -64,12 +64,12 @@ CKey CKeyFactory::transform() {
     array<unsigned char, 20> ripemd160_hash;
     {
         const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
-        size_t privateKeyBN_size = BN_bn2bin(privateKeyBN, privKey.data());
+        BN_bn2bin(privateKeyBN, privKey.data());
 
         array<unsigned char, 65> pubKey;
-        size_t pubKey_size = EC_POINT_point2oct(EC_KEY_get0_group(key),
-                EC_KEY_get0_public_key(key), EC_KEY_get_conv_form(key),
-                pubKey.data(), pubKey.size(), bn_ctx);
+        EC_POINT_point2oct(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key),
+                EC_KEY_get_conv_form(key), pubKey.data(), pubKey.size(),
+                bn_ctx);
 
         size_t asd = pubKey.size();
 
