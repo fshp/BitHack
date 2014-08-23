@@ -15,7 +15,7 @@ typedef vector<CKey>                 resultType;
 typedef shared_ptr<resultType>       resultPointer;
 typedef shared_future<resultPointer> resultFuture;
 
-auto thread_generator(const size_t count) {
+resultPointer thread_generator(const size_t count) {
     auto result = make_shared<resultType>();
     result->resize(count);
 
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 
     while(true) {
         static auto i = 0;
-        if(all_of(begin(results), end(results), [](const auto f) {
+        if(all_of(begin(results), end(results), [](const resultFuture f) {
             return f.wait_for(std::chrono::seconds(0)) == future_status::ready;
         }
         )) {
@@ -75,14 +75,14 @@ int main(int argc, char* argv[]) {
     cerr << endl;
 
     auto result_count = 0;
-    for_each(begin(results), end(results), [&result_count](auto r){result_count += r.get()->size();});
+    for_each(begin(results), end(results), [&result_count](const resultFuture r){result_count += r.get()->size();});
     cerr << "Generated keys: " << result_count << endl;
     cerr << "Writte keys...";
 
     for_each(begin(results), end(results),
-            [](auto f) {
+            [](const resultFuture f) {
                 for_each(begin(*f.get()), end(*f.get()),
-                        [](auto key) {
+                        [](const CKey key) {
                     cout << key;
                 });
     });
