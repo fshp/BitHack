@@ -23,8 +23,8 @@ if(NOT Threads_FOUND)
     return()
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -O3")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -s -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -s -O3")
 
 set(SOURCE_EXE src/main.cpp
 				src/CKeyFactory.cpp
