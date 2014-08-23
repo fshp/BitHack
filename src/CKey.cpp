@@ -23,11 +23,9 @@ CKey::~CKey() {
 ostream& operator <<(ostream &os, const CKey &key) {
     boost::format formater("%02x");
 
-    os << "Private key: \t\t";
     for (auto p : key.m_privateKey)
         os << formater % static_cast<uint16_t>(p);
-    os << endl;
-    os << "Address in Ripemd160: \t";
+    os << "\t\t";
     for (auto p : key.m_addressRipemd160)
         os << formater % static_cast<uint16_t>(p);
     os << endl;
