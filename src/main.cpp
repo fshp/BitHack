@@ -2,12 +2,10 @@
 #include <memory>
 #include <thread>
 #include <future>
-#include <chrono>
-#include <unistd.h>
 #include <vector>
 #include <algorithm>
+#include <boost/lexical_cast.hpp>
 
-#include "CKey.hpp"
 #include "CKeyFactory.hpp"
 
 using namespace std;
@@ -31,22 +29,34 @@ auto thread_generator(const size_t count) {
     return result;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 
-    const auto thread_count = 8;
-    const auto keys_count   = 100000;
+    int thread_count = 8;
+    int keys_count   = 100000;
 
-    cerr << "Thread count: " << thread_count << endl;
-    cerr << "Keys per thread: " << keys_count << endl;
+    if (argc == 3) {
+        thread_count = boost::lexical_cast<int>(argv[1]);
+        keys_count   = boost::lexical_cast<int>(argv[2]);
+    }
+
+    int keys_per_thread         = keys_count/thread_count;
+    int add_keys_to_last_thread = keys_count % thread_count;
+
+    cerr << "Thread count: \t\t\t"            << thread_count            << endl;
+    cerr << "Keys per thread: \t\t"           << keys_per_thread         << endl;
+    cerr << "Add keys to the last thread: \t" << add_keys_to_last_thread << endl;
 
     vector< resultFuture >    results;
 
     for(auto i = 0; i < thread_count; ++i) {
-        auto customer_generator = bind(thread_generator, keys_count);
+
+        if(i+1 == thread_count) keys_per_thread+=add_keys_to_last_thread;
+
+        auto customer_generator = bind(thread_generator, keys_per_thread);
         auto task = packaged_task<resultPointer()>(customer_generator);
         results.push_back(task.get_future().share());
         thread(std::move(task)).detach();
-        cerr << "Thread " << i+1 << " is running" << endl;
+        cerr << "Thread " << i+1 << " is running for generate " << keys_per_thread << " keys"<< endl;
         cerr.flush();
     }
 
@@ -76,23 +86,8 @@ int main() {
                     cout << key;
                 });
     });
-
+    cout.flush();
     cerr << "Good bye!" << endl;
-
-/*    auto f1 = t.get_future();
-    thread(std::move(t)).detach();
-
-    for(auto i = 0; i < 100000; ++i) {
-        cout << i;
-        cout.flush();
-        if(f1.wait_for(std::chrono::seconds(1)) == future_status::ready) break;
-    }
-    cout << endl;
-
-    f1.wait();
-    auto result = f1.get();
-
-    cout << "Gen keys: " << result->size() << endl;*/
 
     return (0);
 }
