@@ -6,6 +6,11 @@ namespace BitHack {
 CKey::CKey() {
 }
 
+CKey::CKey(const CKey &other) :
+        m_privateKey(other.m_privateKey),
+        m_addressRipemd160(other.m_addressRipemd160) {
+}
+
 CKey::CKey(const array<unsigned char, 32> &privateKey,
         const array<unsigned char, 20> &addressRipemd160) :
         m_privateKey(privateKey), m_addressRipemd160(addressRipemd160) {
