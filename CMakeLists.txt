@@ -28,9 +28,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 
 set(SOURCE_EXE src/main.cpp
 				src/CKeyFactory.cpp
-				src/CKey.cpp
-				src/base58.c
-				src/utils.c)
+				src/CKey.cpp)
 add_executable(BitHack ${SOURCE_EXE})
 
 target_link_libraries(BitHack ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
