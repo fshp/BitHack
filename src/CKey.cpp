@@ -1,5 +1,6 @@
 #include "CKey.hpp"
 #include <boost/format.hpp>
+#include <functional>
 
 namespace BitHack {
 
@@ -22,12 +23,11 @@ CKey::~CKey() {
 
 ostream& operator <<(ostream &os, const CKey &key) {
     boost::format formater("%02x");
+    auto printer = [&formater](const uint16_t c){cout << formater % c;};
 
-    for (auto p : key.m_privateKey)
-        os << formater % static_cast<uint16_t>(p);
+    for_each(begin(key.m_privateKey), end(key.m_privateKey), printer);
     os << "\t\t";
-    for (auto p : key.m_addressRipemd160)
-        os << formater % static_cast<uint16_t>(p);
+    for_each(begin(key.m_addressRipemd160), end(key.m_addressRipemd160), printer);
     os << endl;
     return os;
 }
