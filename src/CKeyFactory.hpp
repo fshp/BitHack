@@ -16,7 +16,7 @@ class CKeyFactory {
 public:
     CKeyFactory();
     virtual ~CKeyFactory();
-    CKey createKey();
+    void createKey();
     CKey nextKey();
 
 protected:

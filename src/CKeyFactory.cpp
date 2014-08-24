@@ -27,6 +27,7 @@ CKeyFactory::CKeyFactory() {
 
     EC_GROUP_free(precomputeGroup);
 
+    createKey();
 }
 
 CKeyFactory::~CKeyFactory() {
@@ -34,22 +35,19 @@ CKeyFactory::~CKeyFactory() {
     BN_CTX_free(bn_ctx);
 }
 
-CKey CKeyFactory::createKey() {
+void CKeyFactory::createKey() {
     EC_KEY_generate_key(key);
-
-    return transform();
 }
 
 CKey CKeyFactory::nextKey() {
+
+    auto result = transform();
+
     const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
     BIGNUM newPrivateKey;
     BN_init(&newPrivateKey);
     BN_copy(&newPrivateKey, privateKeyBN);
     BN_add_word(&newPrivateKey, 1);
-
-/*    EC_POINT *newPubKey2 = EC_POINT_new(EC_KEY_get0_group(key));
-    EC_POINT_mul(EC_KEY_get0_group(key), newPubKey2, &newPrivateKey, NULL, NULL,
-            bn_ctx);*/
 
     EC_POINT *newPubKey = EC_POINT_new(EC_KEY_get0_group(key));
     const EC_POINT *g = EC_GROUP_get0_generator(EC_KEY_get0_group(key));
@@ -64,7 +62,7 @@ CKey CKeyFactory::nextKey() {
     BN_free(&newPrivateKey);
     EC_POINT_free(newPubKey);
 
-    return transform();
+    return result;
 }
 
 CKey CKeyFactory::transform() {
