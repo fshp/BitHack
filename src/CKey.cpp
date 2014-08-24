@@ -1,24 +1,21 @@
 #include "CKey.hpp"
 #include <boost/format.hpp>
 #include <functional>
+#include <utility>
 
 namespace BitHack {
 
 CKey::CKey() {
 }
 
-CKey::CKey(const CKey &other) :
-        m_privateKey(other.m_privateKey),
-        m_addressRipemd160(other.m_addressRipemd160) {
+CKey::CKey(CKey&& other) :
+        m_privateKey(move(other.m_privateKey)),
+        m_addressRipemd160(move(other.m_addressRipemd160)) {
 }
 
 CKey::CKey(const array<unsigned char, 32> &privateKey,
         const array<unsigned char, 20> &addressRipemd160) :
         m_privateKey(privateKey), m_addressRipemd160(addressRipemd160) {
-}
-
-CKey::~CKey() {
-    // TODO Auto-generated destructor stub
 }
 
 ostream& operator <<(ostream &os, const CKey &key) {

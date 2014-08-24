@@ -11,13 +11,12 @@ using namespace std;
 class CKey {
     friend class CKeyFactory;
 public:
-    CKey();
-    CKey(const CKey &other);
-    virtual ~CKey();
+    CKey(CKey&& other);
     friend ostream& operator <<(ostream &os, const CKey &key);
 
 protected:
-
+    CKey();
+    CKey(const CKey &other) = delete;
     CKey(const array<unsigned char, 32> &privateKey,
             const array<unsigned char, 20> &addressRipemd160);
     array<unsigned char, 32> m_privateKey;
