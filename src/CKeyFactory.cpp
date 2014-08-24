@@ -3,6 +3,7 @@
 #include <openssl/bn.h>
 #include <openssl/obj_mac.h>
 #include <array>
+#include <assert.h>
 
 #include "CKey.hpp"
 
@@ -46,9 +47,16 @@ CKey CKeyFactory::nextKey() {
     BN_copy(&newPrivateKey, privateKeyBN);
     BN_add_word(&newPrivateKey, 1);
 
+/*    EC_POINT *newPubKey2 = EC_POINT_new(EC_KEY_get0_group(key));
+    EC_POINT_mul(EC_KEY_get0_group(key), newPubKey2, &newPrivateKey, NULL, NULL,
+            bn_ctx);*/
+
     EC_POINT *newPubKey = EC_POINT_new(EC_KEY_get0_group(key));
-    EC_POINT_mul(EC_KEY_get0_group(key), newPubKey, &newPrivateKey, NULL, NULL,
-            bn_ctx);
+    const EC_POINT *g = EC_GROUP_get0_generator(EC_KEY_get0_group(key));
+    const EC_POINT *pubKey = EC_KEY_get0_public_key(key);
+    EC_POINT_add(EC_KEY_get0_group(key), newPubKey, g, pubKey, bn_ctx);
+
+    //assert(EC_POINT_cmp(EC_KEY_get0_group(key), newPubKey, newPubKey2, bn_ctx) == 0);
 
     EC_KEY_set_private_key(key, &newPrivateKey);
     EC_KEY_set_public_key(key, newPubKey);
