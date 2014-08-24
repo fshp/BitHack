@@ -39,6 +39,8 @@ int main(int argc, char* argv[]) {
         keys_count   = boost::lexical_cast<int>(argv[2]);
     }
 
+    thread_count = min(thread_count, keys_count);
+
     int keys_per_thread         = keys_count/thread_count;
     int add_keys_to_last_thread = keys_count % thread_count;
 
