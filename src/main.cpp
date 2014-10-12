@@ -4,7 +4,6 @@
 #include <future>
 #include <vector>
 #include <algorithm>
-#include <utility>
 #include <boost/lexical_cast.hpp>
 
 #include "CKeyFactory.hpp"
