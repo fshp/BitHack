@@ -31,6 +31,19 @@ CKeyFactory::~CKeyFactory() {
 
 void CKeyFactory::createKey() {
     EC_KEY_generate_key(key);
+    BIGNUM *bn = BN_new();
+    BN_one(bn);
+    EC_KEY_set_private_key(key, bn);
+
+    auto group = EC_KEY_get0_group(key);
+
+    const EC_POINT *g = EC_GROUP_get0_generator(group);
+    EC_POINT *newPubKey = EC_POINT_new(group);
+
+    EC_POINT_mul(group, newPubKey, bn, NULL, NULL, bn_ctx);
+    EC_KEY_set_public_key(key, newPubKey);
+
+    BN_clear_free(bn);
 }
 
 CKey CKeyFactory::nextKey() {
@@ -63,7 +76,7 @@ CKey CKeyFactory::transform() {
     addressRipemd160_t ripemd160_hash;
     {
         const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
-        BN_bn2bin(privateKeyBN, privKey.data());
+        BN_bn2binpad(privateKeyBN, privKey.data(), privKey.size());
 
         std::array<unsigned char, 65> pubKey;
         EC_POINT_point2oct(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key),
