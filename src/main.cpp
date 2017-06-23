@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     auto result_count = 0;
     for_each(begin(results), end(results), [&result_count](const resultFuture &r){result_count += r.get()->size();});
     cerr << "Generated keys: " << result_count << endl;
-    cerr << "Writte keys...";
+    cerr << "Writte keys...\n";
 
     for_each(begin(results), end(results),
             [](const resultFuture &f) {
