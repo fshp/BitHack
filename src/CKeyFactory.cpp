@@ -38,10 +38,9 @@ CKey CKeyFactory::nextKey() {
     auto result = transform();
 
     const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
-    BIGNUM newPrivateKey;
-    BN_init(&newPrivateKey);
-    BN_copy(&newPrivateKey, privateKeyBN);
-    BN_add_word(&newPrivateKey, 1);
+    BIGNUM *newPrivateKey = BN_new();
+    BN_copy(newPrivateKey, privateKeyBN);
+    BN_add_word(newPrivateKey, 1);
 
     EC_POINT *newPubKey = EC_POINT_new(EC_KEY_get0_group(key));
     const EC_POINT *g = EC_GROUP_get0_generator(EC_KEY_get0_group(key));
@@ -50,10 +49,10 @@ CKey CKeyFactory::nextKey() {
 
     //assert(EC_POINT_cmp(EC_KEY_get0_group(key), newPubKey, newPubKey2, bn_ctx) == 0);
 
-    EC_KEY_set_private_key(key, &newPrivateKey);
+    EC_KEY_set_private_key(key, newPrivateKey);
     EC_KEY_set_public_key(key, newPubKey);
 
-    BN_free(&newPrivateKey);
+    BN_free(newPrivateKey);
     EC_POINT_free(newPubKey);
 
     return result;
