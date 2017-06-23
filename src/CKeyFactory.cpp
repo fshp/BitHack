@@ -3,7 +3,7 @@
 
 namespace BitHack {
 
-const string CKeyFactory::base58_map =
+const std::string CKeyFactory::base58_map =
         "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
 CKeyFactory::CKeyFactory() {
