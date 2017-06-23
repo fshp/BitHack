@@ -10,8 +10,6 @@
 
 namespace BitHack {
 
-using namespace std;
-
 class CKeyFactory {
 public:
     CKeyFactory();
@@ -24,7 +22,8 @@ protected:
     RIPEMD160_CTX ripemd_ctx;
     SHA256_CTX sha_ctx;
     EC_KEY *key;
-    static const string base58_map;
+    static const std::string base58_map;
+
     CKey transform();
 
 };

@@ -59,20 +59,20 @@ CKey CKeyFactory::nextKey() {
 }
 
 CKey CKeyFactory::transform() {
-    array<unsigned char, 32> privKey;
-    array<unsigned char, 20> ripemd160_hash;
+    privateKey_t privKey;
+    addressRipemd160_t ripemd160_hash;
     {
         const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
         BN_bn2bin(privateKeyBN, privKey.data());
 
-        array<unsigned char, 65> pubKey;
+        std::array<unsigned char, 65> pubKey;
         EC_POINT_point2oct(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key),
                 EC_KEY_get_conv_form(key), pubKey.data(), pubKey.size(),
                 bn_ctx);
 
         size_t asd = pubKey.size();
 
-        array<unsigned char, 32> sha256_hash;
+        std::array<unsigned char, 32> sha256_hash;
         SHA256_Init(&sha_ctx);
         SHA256_Update(&sha_ctx, pubKey.data(), pubKey.size());
         SHA256_Final(sha256_hash.data(), &sha_ctx);
