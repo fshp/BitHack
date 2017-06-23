@@ -72,18 +72,20 @@ CKey CKeyFactory::nextKey() {
 }
 
 CKey CKeyFactory::transform() {
-    privateKey_t privKey;
-    addressRipemd160_t ripemd160_hash;
+    privKey_t privKey;
+    ripemd160_t addrUncompressed;
+    ripemd160_t addrCompressed;
     {
         const BIGNUM *privateKeyBN = EC_KEY_get0_private_key(key);
         BN_bn2binpad(privateKeyBN, privKey.data(), privKey.size());
 
         std::array<unsigned char, 65> pubKey;
         EC_POINT_point2oct(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key),
-                EC_KEY_get_conv_form(key), pubKey.data(), pubKey.size(),
-                bn_ctx);
+                           POINT_CONVERSION_UNCOMPRESSED, pubKey.data(), pubKey.size(), bn_ctx);
 
-        size_t asd = pubKey.size();
+        std::array<unsigned char, 33> pubKeyCompressed;
+        EC_POINT_point2oct(EC_KEY_get0_group(key), EC_KEY_get0_public_key(key),
+                           POINT_CONVERSION_COMPRESSED, pubKeyCompressed.data(), pubKeyCompressed.size(), bn_ctx);
 
         std::array<unsigned char, 32> sha256_hash;
         SHA256_Init(&sha_ctx);
@@ -92,9 +94,17 @@ CKey CKeyFactory::transform() {
 
         RIPEMD160_Init(&ripemd_ctx);
         RIPEMD160_Update(&ripemd_ctx, sha256_hash.data(), sha256_hash.size());
-        RIPEMD160_Final(ripemd160_hash.data(), &ripemd_ctx);
+        RIPEMD160_Final(addrUncompressed.data(), &ripemd_ctx);
+
+        SHA256_Init(&sha_ctx);
+        SHA256_Update(&sha_ctx, pubKeyCompressed.data(), pubKeyCompressed.size());
+        SHA256_Final(sha256_hash.data(), &sha_ctx);
+
+        RIPEMD160_Init(&ripemd_ctx);
+        RIPEMD160_Update(&ripemd_ctx, sha256_hash.data(), sha256_hash.size());
+        RIPEMD160_Final(addrCompressed.data(), &ripemd_ctx);
     }
-    return CKey(privKey, ripemd160_hash);
+    return CKey(privKey, addrUncompressed, addrCompressed);
 }
 
 } /* namespace BitHack */

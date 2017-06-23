@@ -4,8 +4,10 @@
 
 namespace BitHack {
 
-CKey::CKey(const privateKey_t &privateKey, const addressRipemd160_t &addressRipemd160) :
-        m_privateKey(privateKey), m_addressRipemd160(addressRipemd160) {
+CKey::CKey(const privKey_t &privateKey, const ripemd160_t &addrUncomp, const ripemd160_t &addrComp) :
+    m_privateKey(privateKey),
+    m_addrUncomp(addrUncomp),
+    m_addrComp(addrComp) {
 }
 
 std::ostream& operator <<(std::ostream &os, const CKey &key) {
@@ -13,9 +15,10 @@ std::ostream& operator <<(std::ostream &os, const CKey &key) {
     auto printer = [&formater](const uint16_t c){std::cout << formater % c;};
 
     std::for_each(std::begin(key.m_privateKey), std::end(key.m_privateKey), printer);
-    os << "\t\t";
-    std::for_each(std::begin(key.m_addressRipemd160), std::end(key.m_addressRipemd160), printer);
-    os << std::endl;
+    os << "\t";
+    std::for_each(std::begin(key.m_addrUncomp), std::end(key.m_addrUncomp), printer);
+    os << "\t";
+    std::for_each(std::begin(key.m_addrComp), std::end(key.m_addrComp), printer);
     return os;
 }
 

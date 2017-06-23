@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
             [](const resultFuture &f) {
                 for_each(begin(*f.get()), end(*f.get()),
                         [](const CKey &key) {
-                    cout << key;
+                    cout << key << "\n";
                 });
     });
     cout.flush();

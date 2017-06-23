@@ -6,8 +6,8 @@
 
 namespace BitHack {
 
-using privateKey_t       = std::array<unsigned char, 32>;
-using addressRipemd160_t = std::array<unsigned char, 20>;
+using privKey_t       = std::array<unsigned char, 32>;
+using ripemd160_t = std::array<unsigned char, 20>;
 
 class CKey {
 public:
@@ -15,10 +15,11 @@ public:
     friend std::ostream& operator <<(std::ostream &os, const CKey &key);
 
 protected:
-    CKey(const privateKey_t &privateKey, const addressRipemd160_t &addressRipemd160);
+    CKey(const privKey_t &privateKey, const ripemd160_t &addrUncomp, const ripemd160_t &m_addrComp);
 
-    privateKey_t      m_privateKey;
-    addressRipemd160_t m_addressRipemd160;
+    privKey_t      m_privateKey;
+    ripemd160_t m_addrUncomp;
+    ripemd160_t m_addrComp;
 };
 
 } /* namespace BitHack */
